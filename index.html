@@ -51,6 +51,12 @@
       padding: 1.25rem 1.125rem 1.125rem;
     }
   }
+  .sc-tool-help {
+    font-size: 0.8125rem;
+    color: var(--sc-muted);
+    margin: 0 0 1rem;
+    line-height: 1.45;
+  }
   .sc-tool-label {
     font-size: 0.75rem;
     color: var(--sc-muted);
@@ -212,12 +218,16 @@
   <div class="sc-tool-window" role="region" aria-labelledby="sc-tool-heading">
     <div class="sc-tool-body">
       <h2 class="sc-sr-only" id="sc-tool-heading">SoundCloud track ID — paste a public track URL</h2>
+      <p class="sc-tool-help" id="sc-tool-help">
+        Paste a public SoundCloud track link (regular or short <span style="white-space: nowrap">on.soundcloud.com</span> links). Tap Get ID, then Copy to grab the numeric track ID.
+      </p>
       <p class="sc-tool-label">Track URL</p>
       <div class="sc-tool-row">
         <input
           type="url"
           class="sc-tool-input"
           id="sc-url-input"
+          aria-describedby="sc-tool-help"
           inputmode="url"
           enterkeyhint="go"
           placeholder="soundcloud.com/… or on.soundcloud.com/…"
