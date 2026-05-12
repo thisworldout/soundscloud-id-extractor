@@ -38,17 +38,17 @@
   }
   .sc-tool-window {
     width: 100%;
-    max-width: 22rem;
+    max-width: min(40rem, calc(100vw - 2rem));
     background: var(--sc-surface);
     border: 1px solid var(--sc-border);
     border-radius: var(--sc-radius);
   }
   .sc-tool-body {
-    padding: 1.125rem 1rem 1rem;
+    padding: 1.25rem 1rem 1.125rem;
   }
   @media (min-width: 480px) {
     .sc-tool-body {
-      padding: 1.25rem 1.125rem 1.125rem;
+      padding: 1.375rem 1.25rem 1.25rem;
     }
   }
   .sc-tool-help {
@@ -73,11 +73,11 @@
     gap: 0.5rem;
     align-items: stretch;
   }
-  @media (min-width: 480px) {
+  @media (min-width: 640px) {
     .sc-tool-row {
       flex-direction: row;
       gap: 0.5rem;
-      align-items: center;
+      align-items: flex-start;
     }
   }
   .sc-tool-input {
@@ -85,7 +85,7 @@
     min-width: 0;
     width: 100%;
     min-height: 44px;
-    padding: 0 0.75rem;
+    padding: 0.5rem 0.75rem;
     font-size: 16px;
     font-family: var(--sc-font);
     border: 1px solid var(--sc-border);
@@ -94,6 +94,22 @@
     color: var(--sc-text);
     -webkit-appearance: none;
     appearance: none;
+  }
+  textarea.sc-tool-input {
+    display: block;
+    min-height: 5.5rem;
+    line-height: 1.45;
+    font-family: var(--sc-mono);
+    font-size: 16px;
+    resize: vertical;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    field-sizing: content;
+  }
+  @supports not (field-sizing: content) {
+    textarea.sc-tool-input {
+      min-height: 6rem;
+    }
   }
   .sc-tool-input:focus {
     outline: none;
@@ -116,10 +132,11 @@
     cursor: pointer;
     width: 100%;
   }
-  @media (min-width: 480px) {
+  @media (min-width: 640px) {
     .sc-tool-btn {
       width: auto;
       min-width: 5.5rem;
+      margin-top: 0.125rem;
     }
   }
   .sc-tool-btn:disabled {
@@ -191,6 +208,135 @@
     margin: 0.5rem 0 0;
     line-height: 1.35;
   }
+  .sc-tool-result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .sc-tool-linkout,
+  .sc-tool-download {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+    line-height: 1.2;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--sc-border);
+    background: var(--sc-surface);
+    color: var(--sc-text);
+  }
+  .sc-tool-linkout:hover,
+  .sc-tool-download:hover {
+    background: var(--sc-bg);
+  }
+  @media (min-width: 400px) {
+    .sc-tool-result-actions {
+      flex-wrap: nowrap;
+    }
+    .sc-tool-linkout,
+    .sc-tool-download {
+      flex: 1 1 auto;
+    }
+  }
+  .sc-tool-history {
+    margin-top: 1.25rem;
+    padding-top: 1.125rem;
+    border-top: 1px solid var(--sc-border);
+  }
+  .sc-tool-history-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .sc-tool-history-head .sc-tool-label {
+    margin: 0;
+  }
+  .sc-tool-history-clear {
+    font-size: 0.75rem;
+    font-family: inherit;
+    color: var(--sc-muted);
+    background: none;
+    border: none;
+    padding: 0.25rem 0.375rem;
+    margin: 0 -0.375rem 0 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .sc-tool-history-clear:hover {
+    color: var(--sc-text);
+  }
+  .sc-tool-history-clear:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    text-decoration: none;
+  }
+  .sc-tool-history-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+  .sc-tool-history-item {
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    padding: 0.5rem 0.625rem;
+    border: 1px solid var(--sc-border);
+    border-radius: 6px;
+    background: var(--sc-bg);
+    color: var(--sc-text);
+    cursor: pointer;
+  }
+  @media (hover: hover) {
+    .sc-tool-history-item:hover {
+      border-color: #ccc;
+      background: #eee;
+    }
+  }
+  .sc-tool-history-item-title {
+    display: block;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+  .sc-tool-history-item-id {
+    display: block;
+    font-family: var(--sc-mono);
+    font-size: 0.75rem;
+    color: var(--sc-muted);
+    margin-top: 0.125rem;
+  }
+  .sc-tool-history-empty {
+    font-size: 0.8125rem;
+    color: var(--sc-muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+  .sc-tool-history.is-empty .sc-tool-history-list {
+    display: none;
+  }
+  .sc-tool-history:not(.is-empty) .sc-tool-history-empty {
+    display: none;
+  }
+  .sc-tool-history.is-empty .sc-tool-history-clear {
+    display: none;
+  }
   .sc-tool-error {
     margin-top: 0.875rem;
     display: none;
@@ -219,22 +365,22 @@
     <div class="sc-tool-body">
       <h2 class="sc-sr-only" id="sc-tool-heading">SoundCloud track ID — paste a public track URL</h2>
       <p class="sc-tool-help" id="sc-tool-help">
-        Paste a public SoundCloud track link (regular or short <span style="white-space: nowrap">on.soundcloud.com</span> links). Tap Get ID, then Copy to grab the numeric track ID.
+        Paste a public SoundCloud track link (regular or short <span style="white-space: nowrap">on.soundcloud.com</span> links). Tap Get ID, then Copy to grab the numeric track ID. Recent lookups are saved only in this browser.
       </p>
       <p class="sc-tool-label">Track URL</p>
       <div class="sc-tool-row">
-        <input
-          type="url"
+        <textarea
           class="sc-tool-input"
           id="sc-url-input"
           aria-describedby="sc-tool-help"
           inputmode="url"
           enterkeyhint="go"
-          placeholder="soundcloud.com/… or on.soundcloud.com/…"
-          autocomplete="off"
           autocapitalize="off"
           spellcheck="false"
-        />
+          autocomplete="off"
+          rows="3"
+          placeholder="https://soundcloud.com/… or https://on.soundcloud.com/…"
+        ></textarea>
         <button type="button" class="sc-tool-btn" id="sc-go-btn">Get ID</button>
       </div>
 
@@ -245,6 +391,27 @@
           <button type="button" class="sc-tool-copy" id="sc-copy-btn">Copy</button>
         </div>
         <p class="sc-tool-meta" id="sc-track-title"></p>
+        <div class="sc-tool-result-actions">
+          <a
+            class="sc-tool-linkout"
+            id="sc-open-link"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Open on SoundCloud</a>
+          <button type="button" class="sc-tool-download" id="sc-download-btn">
+            Download .txt
+          </button>
+        </div>
+      </div>
+
+      <div class="sc-tool-history is-empty" id="sc-history" aria-labelledby="sc-history-heading">
+        <div class="sc-tool-history-head">
+          <p class="sc-tool-label" id="sc-history-heading">Recent lookups</p>
+          <button type="button" class="sc-tool-history-clear" id="sc-history-clear">Clear</button>
+        </div>
+        <ul class="sc-tool-history-list" id="sc-history-list"></ul>
+        <p class="sc-tool-history-empty" id="sc-history-empty">No lookups yet—they'll appear here.</p>
       </div>
 
       <div class="sc-tool-error" id="sc-error" role="alert"></div>
@@ -254,6 +421,9 @@
 
 <script>
 (function () {
+  var STORAGE_KEY = "sc-tool-history-v1";
+  var MAX_HISTORY = 15;
+
   var root = document.querySelector("[data-sc-tool]");
   if (!root) return;
 
@@ -264,15 +434,162 @@
   var idDisplay = root.querySelector("#sc-id-display");
   var titleEl = root.querySelector("#sc-track-title");
   var copyBtn = root.querySelector("#sc-copy-btn");
+  var openLink = root.querySelector("#sc-open-link");
+  var downloadBtn = root.querySelector("#sc-download-btn");
+  var historyWrap = root.querySelector("#sc-history");
+  var historyList = root.querySelector("#sc-history-list");
+  var historyClear = root.querySelector("#sc-history-clear");
+
+  var lastSourceUrl = "";
+
+  function normalizeUrl(s) {
+    s = (s || "").trim();
+    if (!s) return s;
+    if (!/^https?:\/\//i.test(s)) s = "https://" + s;
+    return s;
+  }
 
   function hideResult() {
     resultEl.classList.remove("is-visible");
     errorEl.classList.remove("is-visible");
     errorEl.textContent = "";
+    lastSourceUrl = "";
+    openLink.setAttribute("href", "#");
+  }
+
+  function readHistory() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeHistory(entries) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    } catch (e) {
+      /* ignore quota / private mode */
+    }
+  }
+
+  function pushHistory(id, title, sourceUrl) {
+    var entries = readHistory();
+    entries = entries.filter(function (e) {
+      return e && String(e.id) !== String(id);
+    });
+    entries.unshift({
+      id: String(id),
+      title: title || "",
+      sourceUrl: sourceUrl || "",
+      at: new Date().toISOString(),
+    });
+    if (entries.length > MAX_HISTORY) entries = entries.slice(0, MAX_HISTORY);
+    writeHistory(entries);
+    renderHistory();
+  }
+
+  function bumpHistoryToFront(id) {
+    var entries = readHistory();
+    var idx = entries.findIndex(function (e) {
+      return e && String(e.id) === String(id);
+    });
+    if (idx <= 0) return;
+    var row = entries.splice(idx, 1)[0];
+    entries.unshift(row);
+    writeHistory(entries);
+    renderHistory();
+  }
+
+  function clearHistory() {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {}
+    renderHistory();
+  }
+
+  function renderHistory() {
+    var entries = readHistory();
+    historyWrap.classList.toggle("is-empty", entries.length === 0);
+    historyList.textContent = "";
+    entries.forEach(function (entry) {
+      if (!entry || !entry.id) return;
+      var li = document.createElement("li");
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sc-tool-history-item";
+      btn.setAttribute(
+        "aria-label",
+        "Load track " + entry.id + (entry.title ? ": " + entry.title : "")
+      );
+      var t = document.createElement("span");
+      t.className = "sc-tool-history-item-title";
+      t.textContent = entry.title || "(no title)";
+      var idSpan = document.createElement("span");
+      idSpan.className = "sc-tool-history-item-id";
+      idSpan.textContent = "ID " + entry.id;
+      btn.appendChild(t);
+      btn.appendChild(idSpan);
+      btn.addEventListener("click", function () {
+        applyEntry(entry);
+        bumpHistoryToFront(entry.id);
+      });
+      li.appendChild(btn);
+      historyList.appendChild(li);
+    });
+  }
+
+  function applyEntry(entry) {
+    if (!entry || !entry.id) return;
+    errorEl.classList.remove("is-visible");
+    errorEl.textContent = "";
+    input.value = entry.sourceUrl || "";
+    idDisplay.textContent = entry.id;
+    titleEl.textContent = entry.title || "";
+    lastSourceUrl = normalizeUrl(entry.sourceUrl || "");
+    if (lastSourceUrl) openLink.setAttribute("href", lastSourceUrl);
+    else openLink.setAttribute("href", "#");
+    resultEl.classList.add("is-visible");
+  }
+
+  function buildExportText() {
+    var id = idDisplay.textContent.trim();
+    var title = titleEl.textContent.trim();
+    var when = new Date().toISOString();
+    var lines = [
+      "SoundCloud track export",
+      "=======================",
+      "Track ID: " + id,
+      "Title: " + (title || "(none)"),
+      "Source URL: " + (lastSourceUrl || "(none)"),
+      "Exported (ISO): " + when,
+    ];
+    return lines.join("\n") + "\n";
+  }
+
+  function downloadTxt() {
+    var id = idDisplay.textContent.trim();
+    if (!id) return;
+    var body = buildExportText();
+    var blob = new Blob([body], { type: "text/plain;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "soundcloud-track-" + (id.replace(/\D/g, "") || "export") + ".txt";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () {
+      URL.revokeObjectURL(url);
+    }, 2500);
   }
 
   async function lookup() {
-    var url = input.value.trim();
+    var url = normalizeUrl(input.value);
     hideResult();
 
     if (!url) return;
@@ -300,7 +617,10 @@
 
       idDisplay.textContent = match[1];
       titleEl.textContent = data.title || "";
+      lastSourceUrl = url;
+      openLink.setAttribute("href", lastSourceUrl);
       resultEl.classList.add("is-visible");
+      pushHistory(match[1], data.title || "", url);
     } catch (e) {
       errorEl.textContent =
         "Could not find that track. Use a public SoundCloud track URL.";
@@ -323,11 +643,24 @@
     });
   }
 
+  openLink.addEventListener("click", function (e) {
+    if (!lastSourceUrl || openLink.getAttribute("href") === "#") {
+      e.preventDefault();
+    }
+  });
+
   goBtn.addEventListener("click", lookup);
   copyBtn.addEventListener("click", copyId);
+  downloadBtn.addEventListener("click", downloadTxt);
+  historyClear.addEventListener("click", clearHistory);
   input.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") lookup();
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      lookup();
+    }
   });
+
+  renderHistory();
 })();
 </script>
 </body>
