@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SoundCloud track ID</title>
+</head>
+<body style="margin: 0">
+<style>
+  .sc-tool-root {
+    --sc-bg: #f4f4f4;
+    --sc-surface: #fff;
+    --sc-border: #e0e0e0;
+    --sc-text: #111;
+    --sc-muted: #666;
+    --sc-accent: #111;
+    --sc-error: #b42318;
+    --sc-radius: 8px;
+    --sc-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --sc-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    box-sizing: border-box;
+    font-family: var(--sc-font);
+    color: var(--sc-text);
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+      max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  }
+  .sc-tool-root *,
+  .sc-tool-root *::before,
+  .sc-tool-root *::after {
+    box-sizing: border-box;
+  }
+  .sc-tool-window {
+    width: 100%;
+    max-width: 22rem;
+    background: var(--sc-surface);
+    border: 1px solid var(--sc-border);
+    border-radius: var(--sc-radius);
+  }
+  .sc-tool-body {
+    padding: 1.125rem 1rem 1rem;
+  }
+  @media (min-width: 480px) {
+    .sc-tool-body {
+      padding: 1.25rem 1.125rem 1.125rem;
+    }
+  }
+  .sc-tool-label {
+    font-size: 0.75rem;
+    color: var(--sc-muted);
+    margin: 0 0 0.5rem;
+    font-weight: 400;
+  }
+  .sc-tool-result .sc-tool-label {
+    margin-top: 1rem;
+    margin-bottom: 0.375rem;
+  }
+  .sc-tool-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  @media (min-width: 480px) {
+    .sc-tool-row {
+      flex-direction: row;
+      gap: 0.5rem;
+      align-items: center;
+    }
+  }
+  .sc-tool-input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    min-height: 44px;
+    padding: 0 0.75rem;
+    font-size: 16px;
+    font-family: var(--sc-font);
+    border: 1px solid var(--sc-border);
+    border-radius: 6px;
+    background: var(--sc-surface);
+    color: var(--sc-text);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .sc-tool-input:focus {
+    outline: none;
+    border-color: #999;
+  }
+  .sc-tool-input::placeholder {
+    color: #999;
+  }
+  .sc-tool-btn {
+    flex-shrink: 0;
+    min-height: 44px;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--sc-surface);
+    background: var(--sc-accent);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+  }
+  @media (min-width: 480px) {
+    .sc-tool-btn {
+      width: auto;
+      min-width: 5.5rem;
+    }
+  }
+  .sc-tool-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .sc-tool-result {
+    display: none;
+  }
+  .sc-tool-result.is-visible {
+    display: block;
+  }
+  .sc-tool-codebox {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    padding: 0.625rem 0.75rem;
+    background: var(--sc-bg);
+    border: 1px solid var(--sc-border);
+    border-radius: 6px;
+  }
+  @media (min-width: 380px) {
+    .sc-tool-codebox {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+  .sc-tool-id {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--sc-mono);
+    font-size: clamp(1rem, 4vw, 1.125rem);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    word-break: break-all;
+    line-height: 1.35;
+  }
+  .sc-tool-copy {
+    flex-shrink: 0;
+    min-height: 44px;
+    padding: 0 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--sc-text);
+    background: var(--sc-surface);
+    border: 1px solid var(--sc-border);
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+  }
+  @media (min-width: 380px) {
+    .sc-tool-copy {
+      width: auto;
+      min-height: 36px;
+      align-self: center;
+    }
+  }
+  @media (hover: hover) {
+    .sc-tool-copy:hover {
+      background: var(--sc-bg);
+    }
+  }
+  .sc-tool-meta {
+    font-size: 0.75rem;
+    color: var(--sc-muted);
+    margin: 0.5rem 0 0;
+    line-height: 1.35;
+  }
+  .sc-tool-error {
+    margin-top: 0.875rem;
+    display: none;
+    font-size: 0.8125rem;
+    color: var(--sc-error);
+    line-height: 1.35;
+  }
+  .sc-tool-error.is-visible {
+    display: block;
+  }
+  .sc-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<div class="sc-tool-root" data-sc-tool>
+  <div class="sc-tool-window" role="region" aria-labelledby="sc-tool-heading">
+    <div class="sc-tool-body">
+      <h2 class="sc-sr-only" id="sc-tool-heading">SoundCloud track ID — paste a public track URL</h2>
+      <p class="sc-tool-label">Track URL</p>
+      <div class="sc-tool-row">
+        <input
+          type="url"
+          class="sc-tool-input"
+          id="sc-url-input"
+          inputmode="url"
+          enterkeyhint="go"
+          placeholder="soundcloud.com/… or on.soundcloud.com/…"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+        />
+        <button type="button" class="sc-tool-btn" id="sc-go-btn">Get ID</button>
+      </div>
+
+      <div class="sc-tool-result" id="sc-result" aria-live="polite">
+        <p class="sc-tool-label">Track ID</p>
+        <div class="sc-tool-codebox">
+          <div class="sc-tool-id" id="sc-id-display"></div>
+          <button type="button" class="sc-tool-copy" id="sc-copy-btn">Copy</button>
+        </div>
+        <p class="sc-tool-meta" id="sc-track-title"></p>
+      </div>
+
+      <div class="sc-tool-error" id="sc-error" role="alert"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var root = document.querySelector("[data-sc-tool]");
+  if (!root) return;
+
+  var input = root.querySelector("#sc-url-input");
+  var goBtn = root.querySelector("#sc-go-btn");
+  var resultEl = root.querySelector("#sc-result");
+  var errorEl = root.querySelector("#sc-error");
+  var idDisplay = root.querySelector("#sc-id-display");
+  var titleEl = root.querySelector("#sc-track-title");
+  var copyBtn = root.querySelector("#sc-copy-btn");
+
+  function hideResult() {
+    resultEl.classList.remove("is-visible");
+    errorEl.classList.remove("is-visible");
+    errorEl.textContent = "";
+  }
+
+  async function lookup() {
+    var url = input.value.trim();
+    hideResult();
+
+    if (!url) return;
+
+    goBtn.textContent = "…";
+    goBtn.disabled = true;
+
+    try {
+      var res = await fetch(
+        "https://soundcloud.com/oembed?format=json&url=" + encodeURIComponent(url)
+      );
+      if (!res.ok) throw new Error("fetch");
+      var data = await res.json();
+      var html = data.html || "";
+      var match =
+        html.match(/api\.soundcloud\.com(?:\/|%2F)tracks(?:\/|%2F)(\d+)/i) ||
+        (function () {
+          try {
+            return decodeURIComponent(html).match(/api\.soundcloud\.com\/tracks\/(\d+)/);
+          } catch (e) {
+            return null;
+          }
+        })();
+      if (!match) throw new Error("parse");
+
+      idDisplay.textContent = match[1];
+      titleEl.textContent = data.title || "";
+      resultEl.classList.add("is-visible");
+    } catch (e) {
+      errorEl.textContent =
+        "Could not find that track. Use a public SoundCloud track URL.";
+      errorEl.classList.add("is-visible");
+    }
+
+    goBtn.textContent = "Get ID";
+    goBtn.disabled = false;
+  }
+
+  function copyId() {
+    var id = idDisplay.textContent;
+    if (!id) return;
+    navigator.clipboard.writeText(id).then(function () {
+      var prev = copyBtn.textContent;
+      copyBtn.textContent = "Copied";
+      setTimeout(function () {
+        copyBtn.textContent = prev;
+      }, 1500);
+    });
+  }
+
+  goBtn.addEventListener("click", lookup);
+  copyBtn.addEventListener("click", copyId);
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") lookup();
+  });
+})();
+</script>
+</body>
+</html>
