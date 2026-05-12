@@ -1,48 +1,68 @@
 # soundscloud-id-extractor
 
-Single-page static app: `index.html` only. No build step.
+Small static page that turns a **SoundCloud track URL** into the **numeric track ID** SoundCloud uses in URLs and APIs (for example `https://api.soundcloud.com/tracks/123456789`).
 
-## Vercel
+Repo is a single file: **`index.html`** — no build step, no backend.
 
-**Option A — Git**
+## How it works
 
-1. Put this folder in a Git repo and push to GitHub/GitLab/Bitbucket.
-2. In [Vercel](https://vercel.com/new), import the repo.
-3. Framework preset: **Other** (or “No framework”). Root directory: this folder if the repo is monorepo.
-4. Build command: leave empty. Output directory: leave default (`.`).
+1. **You paste a track link** — full URLs like `https://soundcloud.com/artist/track-name` or short links like `https://on.soundcloud.com/…` work as long as they resolve to a **public** track.
 
-**Option B — CLI**
+2. **The page calls SoundCloud’s oEmbed API** — in the browser it runs:
+
+   `GET https://soundcloud.com/oembed?format=json&url=<your URL, URL-encoded>`
+
+   That is SoundCloud’s documented way to get embed metadata for a resource. The JSON response includes a `title` and an `html` field: a snippet of HTML for the embed widget.
+
+3. **The track ID is read from the embed HTML** — the widget markup references SoundCloud’s track API path, e.g. `https://api.soundcloud.com/tracks/123456789`. The script uses a regular expression to find that number (it also tolerates URL-encoded slashes, `%2F`, in the string).
+
+4. **Results in the UI** — the numeric ID is shown, the oEmbed `title` is shown as a subtitle when present, and **Copy** writes the ID to the clipboard via the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API).
+
+There is **no SoundCloud client id or secret** in this project: everything goes through the public oEmbed endpoint and runs only in your browser.
+
+## What works / what does not
+
+| Works | Usually does not |
+|--------|------------------|
+| Public track URLs | Private or restricted tracks (oEmbed returns nothing useful) |
+| Standard and `on.soundcloud.com` short links | Non-track URLs (playlists, profiles, etc. are out of scope) |
+
+If oEmbed fails or the embed HTML does not contain a track id, the UI shows a short error asking for a public track URL.
+
+## Running and hosting
+
+- **Serve over HTTPS** in production. Clipboard access and predictable `fetch` behavior expect a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts). Opening `index.html` as `file://` may be inconsistent across browsers for cross-origin requests.
+
+### Vercel
+
+**Git**
+
+1. Push this repo to GitHub (or GitLab / Bitbucket).
+2. In [Vercel](https://vercel.com/new), import the project.
+3. Framework: **Other** (or “No framework”). Build command: empty. Output directory: `.` (or the folder that contains `index.html`).
+
+**CLI**
 
 ```bash
-cd soundcloud-id-tool
+cd soundscloud-id-extractor
 npx vercel
 ```
 
-Follow prompts; accept defaults for a static site.
+### Netlify
 
-## Netlify
+**Drag and drop** — upload the folder at [Netlify Drop](https://app.netlify.com/drop).
 
-**Option A — Drag and drop**
+**Git** — import the repo; build command empty; publish directory `.`.
 
-1. Zip this folder (or use the folder as-is if the UI allows).
-2. In [Netlify Drop](https://app.netlify.com/drop), deploy the folder.
-
-**Option B — Git**
-
-1. Push the repo to GitHub.
-2. Netlify → **Add new site** → **Import an existing project**.
-3. Build command: empty. Publish directory: `.` (or this folder’s path in the repo).
-
-**Option C — CLI**
+**CLI**
 
 ```bash
-cd soundcloud-id-tool
+cd soundscloud-id-extractor
 npx netlify deploy --prod --dir .
 ```
 
-(`netlify-cli` must be installed or use `npx`.)
+## Repository layout
 
-## Notes
-
-- Clipboard and `fetch` need **HTTPS**; both hosts provide that on the default URL.
-- Keep `Downloads/soundcloud_id_extractor.html` in sync with `index.html` if you still use the Webflow embed (or copy from one to the other when you change styles or logic).
+| File | Role |
+|------|------|
+| `index.html` | Markup, styles, and script for the tool |
