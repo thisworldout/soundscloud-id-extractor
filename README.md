@@ -1,4 +1,4 @@
-# SoundCloud track ID (static site)
+# soundscloud-id-extractor
 
 Single-page static app: `index.html` only. No build step.
 
